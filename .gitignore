@@ -1,0 +1,4 @@
+**/node_modules/
+**/*.gvmi
+**/*.mp3
+**/*.wav
