@@ -85,11 +85,13 @@ What was a nice surprise?
 **_My general experience with Golem Network was very good. I was able to get started very quickly. I was surprised with the how simple and sophisticated Yagna is_**.
 
 In what projects could you utilize Golem Network?
+
 _Recently I have been working on a peer-to-peer ride sharing system. I'm starting to think of some use cases where I can utilize Golem Network. I'll update this section once I have a clear idea._
 
 #### Preview Program
 
 Were the tasks and instructions adequate and clear?
+
 **_Yes, the tasks and instructions were very clear and easy to follow. However some of the questions asked here are not justifiable for the first task. I'd suggest asking these questions after the user has completed a few tasks._**
 
 ---
