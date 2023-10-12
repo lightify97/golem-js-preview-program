@@ -33,7 +33,8 @@ Could you find the necessary information? If not what topics were difficult to f
 How would you change the structure/navigation of the docs? Recommend changes.
 
 > For this task I found the documentation's structure very nice. Since I only had to visit one page, I'm pretty satisfied with how the docs are structured.  
-> Are examples and tutorials useful? What was missing, and what was too detailed or unnecessary?
+---
+Are examples and tutorials useful? What was missing, and what was too detailed or unnecessary?
 > Yes these are very useful with right amount of detail. I haven't found anything unnecessary or missing.
 
 ---
