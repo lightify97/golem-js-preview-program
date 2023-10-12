@@ -1,0 +1,16 @@
+{
+  "name": "4-send-files",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "runner": "node requestor.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@golem-sdk/golem-js": "^0.11.2",
+    "commander": "^11.0.0"
+  }
+}

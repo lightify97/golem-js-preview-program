@@ -1,0 +1,14 @@
+{
+    "name": "3-build-your-image",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "runner": "node runner.mjs"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@golem-sdk/golem-js": "^0.11.2"
+    }
+}
