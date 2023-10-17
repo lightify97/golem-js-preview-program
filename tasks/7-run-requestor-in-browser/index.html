@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>WebRequestor Task API</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                font-family: "Arimo", sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container text-center my-10">
+            <h1 class="text-4xl font-[700]">
+                Welcome to Golem Image Processor
+            </h1>
+        </div>
+
+        <!-- Section to display file upload form for images and also display the selected image -->
+        <div class="container flex justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-3/4">
+                <div class="bg-gray-100 p-5 rounded-lg">
+                    <h2 class="text-2xl text-center font-[700]">
+                        Process Image
+                    </h2>
+                    <div class="mt-5">
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="flex flex-col-2">
+                                <label
+                                    for="image"
+                                    class="text-xl font-[700] mt-3 mr-10"
+                                >
+                                    Select Image
+                                </label>
+                                <input
+                                    type="file"
+                                    name="image"
+                                    id="image"
+                                    class="border-2 border-gray-300 p-2 rounded-lg"
+                                />
+                            </div>
+                            <!-- Create 5 checkboxes specifying 5 filters that can be applied to images using ImageMagick. -->
+                            <h2 class="text-xl font-[700] mt-3 mr-10">
+                                Select Filters
+                            </h2>
+                            <br />
+                            <table
+                                class="w-full border-collapse border rounded-lg"
+                            >
+                                <tr>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        Grayscale
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        Charcoal
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        Blur
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        Brightness
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        Contrast
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-6 w-6 text-indigo-600 mx-auto"
+                                            id="grayscaleFilter"
+                                            name="grayscaleFilter"
+                                        />
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-6 w-6 text-indigo-600 mx-auto"
+                                            id="charcoalFilter"
+                                            name="charcoalFilter"
+                                        />
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-6 w-6 text-indigo-600 mx-auto"
+                                            id="blurFilter"
+                                            name="blurFilter"
+                                        />
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-6 w-6 text-indigo-600 mx-auto"
+                                            id="brightnessFilter"
+                                            name="brightnessFilter"
+                                        />
+                                    </td>
+                                    <td
+                                        class="p-4 border border-gray-300 text-center"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-6 w-6 text-indigo-600 mx-auto"
+                                            id="contrastFilter"
+                                            name="contrastFilter"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="mt-5 text-center">
+                                <button
+                                    class="bg-blue-500 text-white px-5 py-2 rounded-lg"
+                                    id="submit"
+                                >
+                                    Start
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div
+                    class="bg-gray-100 p-5 rounded-lg"
+                    id="image-display-section"
+                >
+                    <h2 class="text-2xl text-center font-[700]">
+                        Selected Image
+                    </h2>
+                    <div class="mt-5">
+                        <img
+                            src=""
+                            alt=""
+                            id="uploaded-image"
+                            class="w-full rounded-lg"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="container justify-center mt-5 mb-4"
+            id="processed-images-section"
+            hidden="true"
+        >
+            <div class="flex-row space-x-4">
+                <div class="bg-gray-200 p-5 rounded-lg">
+                    <h2 class="text-2xl text-center font-[700]">
+                        Processed Image
+                    </h2>
+                    <div
+                        class="mt-5 flex-auto flex items-center"
+                        id="processed-images"
+                    ></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto">
+            <div class="col-6 border-left">
+                <div class="logs console">
+                    <h1 class="text-xl">Logs</h1>
+                    <ul
+                        class="list-item list-disc text-gray-600"
+                        id="logs"
+                    ></ul>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="./requestor.mjs"></script>
+    </body>
+</html>

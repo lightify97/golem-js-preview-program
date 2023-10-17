@@ -19,7 +19,7 @@ const imgName = path.basename(imagePath);
 (async function main() {
     const executor = await TaskExecutor.create({
         package: "02fcbea7c453f2a51c1bdb38fcc6c5b06983d53beba6c0ccc5e5ab95",
-        yagnaOptions: { apiKey: "a8840f21a44a4205bf05307b61018a53" },
+        yagnaOptions: { apiKey: `${process.env.YAGNA_APPKEY}` },
     });
 
     await executor.run(async (ctx) => {
