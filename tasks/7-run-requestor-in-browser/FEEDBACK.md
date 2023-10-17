@@ -7,6 +7,8 @@ Thank you for taking the time to complete this Golem JS Preview Program task!
 We appreciate your valuable feedback and suggestions on how to improve the Golem Network.
 Please fill out the form below:
 
+![Preview](./preview.png "Preview of the Web Page")
+
 ## Task #7 - Requestor in browser
 
 ### Estimated completion time
