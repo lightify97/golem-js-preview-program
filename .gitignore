@@ -1,7 +1,5 @@
 **/node_modules/
 **/*.gvmi
-**/*.mp3
-**/*.wav
 **/*.env
 **/*.env.*
 **/*.log

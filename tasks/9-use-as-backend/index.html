@@ -1,0 +1,249 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WAV to Text Conversion</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                font-family: "Arimo", sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-100 p-8">
+        <div class="text-5xl text-center mb-10">
+            <h1 class="text-4xl font-[700]">Welcome to Golem STT</h1>
+        </div>
+        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-semibold mb-4">WAV to Text Conversion</h1>
+
+            <div class="mb-4">
+                <input
+                    name="audioFile"
+                    type="file"
+                    accept=".wav"
+                    id="wavFileInput"
+                    class="hidden"
+                />
+                <label
+                    for="wavFileInput"
+                    class="bg-blue-500 text-white p-2 rounded cursor-pointer hover:bg-blue-600"
+                >
+                    Upload WAV File
+                </label>
+                <br />
+            </div>
+            <span id="selectedFile" class="mt-5"></span>
+
+            Add an audio player
+            <audio controls id="audioPlayer" class="mt-4" hidden>
+                Your browser does not support the audio element.
+            </audio>
+
+            <button
+                id="convertButton"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-5"
+                disabled
+            >
+                Convert to Text
+            </button>
+
+            <div id="stt-output" hidden>
+                <div class="mt-4">
+                    <h2 class="text-lg font-semibold mb-2">Output Text:</h2>
+                    <div id="outputText" class="bg-gray-200 p-3 rounded"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const wavFileInput = document.getElementById("wavFileInput");
+            const convertButton = document.getElementById("convertButton");
+            const selectedFile = document.getElementById("selectedFile");
+            const outputText = document.getElementById("outputText");
+            const sttOutput = document.getElementById("stt-output");
+            const audioPlayer = document.getElementById("audioPlayer");
+
+            wavFileInput.addEventListener("change", () => {
+                const fileName = wavFileInput.files[0].name;
+                selectedFile.textContent = `Selected file: ${fileName}`;
+                convertButton.removeAttribute("disabled");
+                const path = (window.URL || window.webkitURL).createObjectURL(
+                    wavFileInput.files[0]
+                );
+                audioPlayer.removeAttribute("hidden");
+                audioPlayer.src = path; // Set the audio source
+            });
+
+            convertButton.addEventListener("click", async () => {
+                sttOutput.removeAttribute("hidden");
+
+                // Replace with your actual STT conversion code here
+                // For example, you can use Web Speech API or a server-side STT service.
+
+                // upload file the server
+                const formData = new FormData();
+                console.log(wavFileInput.files[0]);
+                formData.append("file", wavFileInput.files[0]);
+                const response = await fetch("http://localhost:3000/stt", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                // Simulating STT conversion with a delay (replace this with actual conversion)
+                convertButton.setAttribute("disabled", "disabled");
+                outputText.textContent = "Converting...";
+
+                setTimeout(() => {
+                    outputText.textContent =
+                        "This is the text from the WAV file";
+                    convertButton.removeAttribute("disabled");
+                }, 3000); // Simulated 3-second conversion delay
+            });
+        </script>
+    </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WAV to Text Conversion</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                font-family: "Arimo", sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-100 p-8">
+        <div class="text-5xl text-center mb-10">
+            <h1 class="text-4xl font-[700]">Welcome to Golem STT</h1>
+        </div>
+        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-semibold mb-4 text-center">
+                Speech to Text Conversion
+            </h1>
+
+            <form
+                action="http://localhost:3000/stt"
+                method="post"
+                enctype="multipart/form-data"
+                class="mb-4"
+            >
+                <input
+                    name="audioFile"
+                    type="file"
+                    accept=".wav"
+                    id="wavFileInput"
+                    class="hidden"
+                />
+                <label
+                    for="wavFileInput"
+                    class="bg-blue-500 text-white p-2 rounded cursor-pointer hover:bg-blue-600"
+                >
+                    Upload WAV File
+                </label>
+            </form>
+
+            <span id="selectedFile" class="mt-5"></span>
+
+            <!-- Add an audio player -->
+            <audio controls id="audioPlayer" class="mt-4" hidden>
+                Your browser does not support the audio element.
+            </audio>
+
+            <button
+                id="convertButton"
+                class="bg-green-500 text-white px-4 py-2 rounded hover-bg-green-600 mt-5"
+                disabled
+            >
+                Convert to Text
+            </button>
+
+            <div id="stt-output" hidden>
+                <div class="mt-4">
+                    <h2 class="text-lg font-semibold mb-2">Output Text:</h2>
+                    <div id="outputText" class="bg-gray-200 p-3 rounded"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const wavFileInput = document.getElementById("wavFileInput");
+            const convertButton = document.getElementById("convertButton");
+            const selectedFile = document.getElementById("selectedFile");
+            const outputText = document.getElementById("outputText");
+            const sttOutput = document.getElementById("stt-output");
+            const audioPlayer = document.getElementById("audioPlayer");
+
+            wavFileInput.addEventListener("change", () => {
+                const fileName = wavFileInput.files[0].name;
+                selectedFile.textContent = `Selected file: ${fileName}`;
+                convertButton.removeAttribute("disabled");
+                const path = (window.URL || window.webkitURL).createObjectURL(
+                    wavFileInput.files[0]
+                );
+                audioPlayer.removeAttribute("hidden");
+                audioPlayer.src = path; // Set the audio source
+            });
+
+            convertButton.addEventListener("click", async () => {
+                sttOutput.removeAttribute("hidden");
+                // outputText.textContent = "Converting...";
+                outputText.innerHTML = `
+                        <div class="flex items-stretch">
+                            <div class="text-xl ml-10">Converting...</div>
+                            <div class="w-7 h-7 rounded-full animate-pulse absolute">
+                                <div class="w-7 h-7 rounded-full absolute
+                            border border-solid border-gray-200"></div>
+                                <div class="w-7 h-7 rounded-full animate-spin absolute
+                            border border-solid border-gray-700 border-t-transparent"></div>
+                            </div>
+                        </div>
+                            `;
+                const formData = new FormData();
+                formData.append("audioFile", wavFileInput.files[0]);
+                const response = await fetch("http://localhost:3000/stt", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                // response.json().then((data) => {
+                //     // add a new line after each ] to make the text more readable
+                //     let output = data.text.split("]").join("]\n");
+                //     outputText.innerHTML = output;
+                // });
+
+                convertButton.setAttribute("disabled", "disabled");
+
+                // display text "Converting..." until the conversion is done
+                const data = await response.json();
+                if (data.status === "success") {
+                    // outputText.textContent = data.text;
+                    let output = data.text.split("[").join("<br>[");
+                    output = output.substring(4);
+                    outputText.innerHTML = output;
+                    convertButton.removeAttribute("disabled");
+                } else {
+                    outputText.textContent = "Error converting file";
+                    convertButton.removeAttribute("disabled");
+                }
+            });
+        </script>
+    </body>
+</html>

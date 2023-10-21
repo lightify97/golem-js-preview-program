@@ -66,7 +66,6 @@ const logger = {
 
 async function run() {
     const imageInput = document.getElementById("image");
-    console.log(imageInput.files[0]);
     const fileData = await readFile(imageInput.files[0]);
     const extension = imageInput.files[0].name.split(".").pop();
     const inputImage = `/golem/input/input.${extension}`;
@@ -75,7 +74,7 @@ async function run() {
         package: "7faa6a327c0a568fb3ad18ed1adf91a7493a445fc0dc640ab3d2eab0",
         yagnaOptions: { apiKey: "a8840f21a44a4205bf05307b61018a53" },
         maxParallelTasks: 5,
-        taskTimeout: 5 * 60 * 1000, // set timeout to 1 hour
+        taskTimeout: 60 * 60 * 1000, // set timeout to 1 hour
         logger,
     });
 
@@ -118,7 +117,7 @@ async function run() {
         return;
     }
 
-    // process iamge
+    // process image
     await executor.forEach(activeFilters, async (ctx, filter) => {
         await ctx.run(filter.command);
 

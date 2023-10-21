@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"@golem-sdk/golem-js": "^0.11.2"
+	}
+}
