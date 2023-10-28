@@ -3,13 +3,9 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import multer from "multer";
 import { GolemNetwork, Job, JobState } from "@golem-sdk/golem-js";
-import fs from "fs";
 
 const app = express();
 const port = 3000;
-
-// ideally, we would use a database to store the jobs
-let activeJobs = [];
 
 // set multer filename and destination to uploads/ directory
 const storage = multer.diskStorage({
@@ -43,18 +39,16 @@ golem
     });
 
 app.post("/stt", uploader.array("audioFile", 15), async (req, res) => {
-    // console.log(req.files);
-
     // Create an array of Promises for job creation
     const jobPromises = req.files.map(async (file) => {
         const job = await golem.createJob(async (ctx) => {
             await ctx.uploadFile(file.path, `/golem/work/${file.filename}`);
             const result = (
                 await ctx.run(
-                    `whisper /golem/work/${file.filename} --model tiny --language en`
+                    `whisper \"/golem/work/${file.filename}\" --model tiny --language en`
                 )
             ).stdout;
-            await ctx.run(`rm /golem/work/${file.filename}`);
+            await ctx.run(`rm \"/golem/work/${file.filename}\"`);
             return result;
         });
 
@@ -68,10 +62,6 @@ app.post("/stt", uploader.array("audioFile", 15), async (req, res) => {
     // Wait for all job creation operations to complete
     const activeJobs = await Promise.all(jobPromises);
 
-    // req.files.forEach((file) => {
-    //     fs.unlinkSync(file.path);
-    // });
-
     res.json({ jobs: activeJobs });
 });
 
@@ -81,12 +71,9 @@ app.get("/stt/:id", async (req, res) => {
     try {
         const state = await job.fetchState();
 
-        console.log(state);
         if (state === JobState.Done) {
-            const error = await job.fetchError();
             const result = await job.fetchResults();
-            console.log(result, error);
-            return res.send(`${result} ${error}`);
+            return res.send(result);
         } else if (state === JobState.Rejected) {
             return res.send("Job Rejected");
         } else if (state === JobState.New) {

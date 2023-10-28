@@ -124,7 +124,6 @@
                             let response = await fetch(
                                 `http://localhost:3000/stt/${jobID}`
                             );
-                            console.log(response);
                             let responseData = await response.json();
                             let outputContainer = document.getElementById(
                                 `conversionOutput-${jobID}`
@@ -160,7 +159,6 @@
                         `http://localhost:3000/stt/${jobID}`
                     );
                     let responseData = await response.text();
-                    console.log(responseData);
                     let outputContainer = document.getElementById(
                         `conversionOutput-${jobID}`
                     );
