@@ -2,11 +2,14 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import multer from "multer";
-import { GolemNetwork, JobState } from "@golem-sdk/golem-js";
+import { GolemNetwork, Job, JobState } from "@golem-sdk/golem-js";
 import fs from "fs";
 
 const app = express();
 const port = 3000;
+
+// ideally, we would use a database to store the jobs
+let activeJobs = [];
 
 // set multer filename and destination to uploads/ directory
 const storage = multer.diskStorage({
@@ -14,7 +17,7 @@ const storage = multer.diskStorage({
         cb(null, "uploads/");
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        cb(null, Date.now() + "_" + file.originalname);
     },
 });
 
@@ -39,37 +42,78 @@ golem
         process.exit(1);
     });
 
-// accept a wav file from the client and return the text content
-app.post("/stt", uploader.single("audioFile"), async (req, res) => {
-    const job = await golem.createJob(async (ctx) => {
-        const file = req.file.path;
-        await ctx.uploadFile(file, "/golem/work/input.wav");
-        let output = (
-            await ctx.run(
-                `whisper /golem/work/input.wav --model tiny --language en`
-            )
-        ).stdout;
-        return output;
+app.post("/stt", uploader.array("audioFile", 15), async (req, res) => {
+    // console.log(req.files);
+
+    // Create an array of Promises for job creation
+    const jobPromises = req.files.map(async (file) => {
+        const job = await golem.createJob(async (ctx) => {
+            await ctx.uploadFile(file.path, `/golem/work/${file.filename}`);
+            const result = (
+                await ctx.run(
+                    `whisper /golem/work/${file.filename} --model tiny --language en`
+                )
+            ).stdout;
+            await ctx.run(`rm /golem/work/${file.filename}`);
+            return result;
+        });
+
+        return {
+            id: job.id, // Get the job ID from the resolved job
+            file: file.originalname,
+            queuedTime: Date.now(),
+        };
     });
 
-    let state = await job.fetchState();
-    // check jobs status every 5 seconds
-    while (state !== JobState.Done || state !== JobState.Failed) {
-        console.log(`Job state: ${state}`);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        state = await job.fetchState();
-        if (state === "done") break;
+    // Wait for all job creation operations to complete
+    const activeJobs = await Promise.all(jobPromises);
+
+    // req.files.forEach((file) => {
+    //     fs.unlinkSync(file.path);
+    // });
+
+    res.json({ jobs: activeJobs });
+});
+
+// return the status of a job
+app.get("/stt/:id", async (req, res) => {
+    const job = golem.getJobById(req.params.id);
+    try {
+        const state = await job.fetchState();
+
+        console.log(state);
+        if (state === JobState.Done) {
+            const error = await job.fetchError();
+            const result = await job.fetchResults();
+            console.log(result, error);
+            return res.send(`${result} ${error}`);
+        } else if (state === JobState.Rejected) {
+            return res.send("Job Rejected");
+        } else if (state === JobState.New) {
+            return res.send("Job not started");
+        } else if (state === JobState.Pending) {
+            return res.send("Job Pending");
+        } else if (state === JobState.Retry) {
+            return res.send("Job Retry");
+        }
+    } catch (err) {
+        res.status(404).json({ error: "Job not found" });
     }
-    const error = await job.fetchError();
-    if (error) {
-        console.error(error);
-        res.status(500).json({ error: error.message });
-        return;
+});
+
+app.get("/stt/result/:id", async (req, res) => {
+    const job = golem.getJobById(req.params.id);
+    try {
+        const state = await job.fetchState();
+        if (state.state === JobState.Finished) {
+            const result = await job.fetchResults();
+            res.send(result);
+        } else {
+            res.status(102).send("Job not finished");
+        }
+    } catch (err) {
+        res.status(404).send("Job not found");
     }
-    const output = await job.fetchResults();
-    console.log(output);
-    fs.unlinkSync(req.file.path);
-    res.json({ status: "success", text: output });
 });
 
 app.listen(port, () => {
