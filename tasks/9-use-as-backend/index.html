@@ -68,48 +68,62 @@
                 const sttOutputs = document.getElementById("sttOutputs");
                 const formData = new FormData();
 
+                let conversions = [];
+
                 wavFileInput.addEventListener("click", () => {
                     convertButton.removeAttribute("disabled");
                 });
 
                 wavFileInput.addEventListener("change", () => {
-                    formData.delete("audioFile");
-                    selectedFiles.innerHTML = "";
+                    let audioPlayers = "";
                     const files = wavFileInput.files;
-                    selectedFiles.innerHTML = "";
+
+                    // selectedFiles.innerHTML = "";
                     convertButton.removeAttribute("disabled");
 
                     for (let i = 0; i < files.length; i++) {
                         const fileName = files[i].name;
                         const audioPlayerId = `audioPlayer${i}`;
 
-                        selectedFiles.innerHTML += `
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="mr-2">${fileName}</span>
-                        <audio controls id="${audioPlayerId}" class="mr-2" hidden>
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-                    `;
-
-                        const audioPlayer =
-                            document.getElementById(audioPlayerId);
-                        audioPlayer.removeAttribute("hidden");
-                        audioPlayer.src = (
-                            window.URL || window.webkitURL
-                        ).createObjectURL(files[i]);
+                        conversions.push({
+                            id: fileName,
+                            file: files[i],
+                            submitted: false,
+                            status: "Selected",
+                        });
                     }
+
+                    conversions.forEach((conversion, idx) => {
+                        const fileName = conversion.file.name;
+                        const audioPlayerId = `audioPlayer${idx}`;
+
+                        audioPlayers += `
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="mr-2">${fileName}</span>
+                                <audio controls id="${audioPlayerId}" 
+                                src="${window.URL.createObjectURL(
+                                    conversion.file
+                                )}" class="mr-2">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                            `;
+                    });
+                    selectedFiles.innerHTML = audioPlayers;
                 });
 
                 convertButton.addEventListener("click", async () => {
                     formData.delete("audioFile");
                     sttOutputs.removeAttribute("hidden");
-                    sttOutputs.innerHTML = "";
+                    // sttOutputs.innerHTML = "";
                     convertButton.setAttribute("disabled", "disabled");
-                    const files = wavFileInput.files;
+                    let newConversions = conversions.filter(
+                        (conversion) => !conversion.submitted
+                    );
 
-                    for (let i = 0; i < files.length; i++) {
-                        formData.append("audioFile", files[i]);
+                    for (let i = 0; i < newConversions.length; i++) {
+                        formData.append("audioFile", newConversions[i].file);
+                        newConversions[i].submitted = true;
                     }
 
                     let response = await fetch("http://localhost:3000/stt", {

@@ -75,13 +75,13 @@ app.get("/stt/:id", async (req, res) => {
             const result = await job.fetchResults();
             return res.send(result);
         } else if (state === JobState.Rejected) {
-            return res.send("Job Rejected");
+            return res.send("Conversion Rejected");
         } else if (state === JobState.New) {
-            return res.send("Job not started");
+            return res.send("Conversion not started");
         } else if (state === JobState.Pending) {
-            return res.send("Job Pending");
+            return res.send("Conversion Pending");
         } else if (state === JobState.Retry) {
-            return res.send("Job Retry");
+            return res.send("Conversion Retry");
         }
     } catch (err) {
         res.status(404).json({ error: "Job not found" });
