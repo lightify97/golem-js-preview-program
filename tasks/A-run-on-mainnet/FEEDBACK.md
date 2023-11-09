@@ -8,6 +8,7 @@ We appreciate your valuable feedback and suggestions on how to improve the Golem
 Please fill out the form below:
 
 ## Task #10 - Running on Mainnet
+![3](https://github.com/lightify97/golem-js-preview-program/assets/16276964/96623e26-86b5-4769-a76f-df34807231c6)
 
 ### Estimated completion time
 
